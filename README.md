@@ -5,4 +5,5 @@ JDBC.
 
 ## `Mission`
 
+CouponShop Mini Exercise
 In progress...
