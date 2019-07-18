@@ -14,11 +14,12 @@ public final class DatabaseCouponDao extends AbstractDao implements CouponDao {
     }
 
     @Override
-    public List<Coupon> findAll() throws SQLException {
+    public List<Coupon> findAll(int id) throws SQLException {
         List<Coupon> coupons = new ArrayList<>();
-        String sql = "SELECT id, name, percentage FROM coupons";
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(sql)) {
+        String sql = "SELECT users.id, user_id, name, percentage FROM coupons JOIN users on coupons.user_id = users.id WHERE user_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+             statement.setInt(1, id);
+             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 coupons.add(fetchCoupon(resultSet));
             }
@@ -28,7 +29,7 @@ public final class DatabaseCouponDao extends AbstractDao implements CouponDao {
 
     @Override
     public Coupon findById(int id) throws SQLException {
-        String sql = "SELECT id, name, percentage FROM coupons WHERE id = ?";
+        String sql = "SELECT users.id, user_id, name, percentage FROM coupons JOIN users on coupons.user_id = users.id WHERE user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -41,7 +42,7 @@ public final class DatabaseCouponDao extends AbstractDao implements CouponDao {
     }
 
     @Override
-    public Coupon add(String name, int percentage) throws SQLException {
+    public Coupon add(String name, int percentage, int user_id) throws SQLException {
         if (name == null || "".equals(name)) {
             throw new IllegalArgumentException("Name cannot be null or empty");
         }
@@ -50,14 +51,15 @@ public final class DatabaseCouponDao extends AbstractDao implements CouponDao {
         }
         boolean autoCommit = connection.getAutoCommit();
         connection.setAutoCommit(false);
-        String sql = "INSERT INTO coupons (name, percentage) VALUES (?, ?)";
+        String sql = "INSERT INTO coupons (name, percentage) VALUES (?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, name);
             statement.setInt(2, percentage);
+            statement.setInt(3, user_id);
             executeInsert(statement);
             int id = fetchGeneratedId(statement);
             connection.commit();
-            return new Coupon(id, name, percentage);
+            return new Coupon(id, name, percentage, user_id);
         } catch (SQLException ex) {
             connection.rollback();
             throw ex;
@@ -90,6 +92,7 @@ public final class DatabaseCouponDao extends AbstractDao implements CouponDao {
         int id = resultSet.getInt("id");
         String name = resultSet.getString("name");
         int percentage = resultSet.getInt("percentage");
-        return new Coupon(id, name, percentage);
+        int user_id = resultSet.getInt("user_id");
+        return new Coupon(id, name, percentage, user_id);
     }
 }

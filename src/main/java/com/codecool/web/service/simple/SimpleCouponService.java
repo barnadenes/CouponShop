@@ -13,16 +13,27 @@ import java.util.List;
 public final class SimpleCouponService implements CouponService {
 
     private final CouponDao couponDao;
-    private final ShopDao shopDao;
+    private ShopDao shopDao;
 
     public SimpleCouponService(CouponDao couponDao, ShopDao shopDao) {
         this.couponDao = couponDao;
         this.shopDao = shopDao;
     }
 
+    public SimpleCouponService(CouponDao couponDao) {
+        this.couponDao = couponDao;
+    }
+
     @Override
-    public List<Coupon> getCoupons() throws SQLException {
-        return couponDao.findAll();
+    public List<Coupon> getCoupons(String user_id) throws SQLException, ServiceException {
+        try {
+            return couponDao.findAll(Integer.parseInt(user_id));
+        } catch (NumberFormatException e) {
+            throw new ServiceException("Coupon id must be an integer");
+        } catch (IllegalArgumentException ex) {
+        throw new ServiceException(ex.getMessage());
+    }
+
     }
 
     @Override
@@ -37,9 +48,9 @@ public final class SimpleCouponService implements CouponService {
     }
 
     @Override
-    public Coupon addCoupon(String name, String percentage) throws SQLException, ServiceException {
+    public Coupon addCoupon(String name, String percentage, String user_id) throws SQLException, ServiceException {
         try {
-            return couponDao.add(name, Integer.parseInt(percentage));
+            return couponDao.add(name, Integer.parseInt(percentage), Integer.parseInt(user_id));
         } catch (NumberFormatException ex) {
             throw new ServiceException("Percentage must be an integer");
         } catch (IllegalArgumentException ex) {
