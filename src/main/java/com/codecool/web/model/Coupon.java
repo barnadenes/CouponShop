@@ -28,6 +28,10 @@ public final class Coupon extends AbstractModel {
         return user_id;
     }
 
+    public int getID() {
+        return super.getId();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

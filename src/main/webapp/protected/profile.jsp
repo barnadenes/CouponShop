@@ -22,7 +22,7 @@
     <c:forEach var="coupon" items="${coupons}">
         <tr>
             <td>${coupon.id}</td>
-            <td><a href="coupon?id=<c:out value="${coupon.id}"/>">${coupon.name}</a></td>
+            <td><a href="coupon?id=<c:out value="${coupon.getId()}"/>">${coupon.name}</a></td>
             <td>${coupon.percentage}</td>
         </tr>
     </c:forEach>

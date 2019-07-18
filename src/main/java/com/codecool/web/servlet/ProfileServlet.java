@@ -1,6 +1,7 @@
 package com.codecool.web.servlet;
 
 import com.codecool.web.dao.database.DatabaseCouponDao;
+import com.codecool.web.model.Coupon;
 import com.codecool.web.model.User;
 import com.codecool.web.service.exception.ServiceException;
 import com.codecool.web.service.simple.SimpleCouponService;
