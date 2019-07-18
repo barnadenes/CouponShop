@@ -11,6 +11,24 @@
     <p>ID: ${shop.id}</p>
     <p>Name: ${shop.name}</p>
 </c:if>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Percentage (%)</th>
+    </tr>
+    </thead>
+    <tbody>
+    <c:forEach var="coupon" items="${coupons}">
+        <tr>
+            <td>${coupon.id}</td>
+            <td><a href="coupon?id=<c:out value="${coupon.id}"/>">${coupon.name}</a></td>
+            <td>${coupon.percentage}</td>
+        </tr>
+    </c:forEach>
+    </tbody>
+</table>
 <jsp:include page="../snippets/show-error.jsp"/>
 <jsp:include page="../snippets/to-profile.jsp"/>
 <jsp:include page="../snippets/logout.jsp"/>
