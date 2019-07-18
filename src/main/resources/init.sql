@@ -24,6 +24,8 @@ CREATE TABLE coupons (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     percentage INTEGER NOT NULL,
+    user_id INTEGER,
+    FOREIGN KEY(user_id) REFERENCES users(id),
     CONSTRAINT name_not_empty CHECK (name <> ''),
 	CONSTRAINT percentage_between_bounds CHECK (percentage >= 0 AND percentage <= 100)
 );
@@ -48,12 +50,12 @@ INSERT INTO shops (name) VALUES
 	('LIDL'),   -- 4
 	('ALDI');   -- 5
 
-INSERT INTO coupons (name, percentage) VALUES
-	('Sausage discount', 10),           -- 1
-	('Bread super-sale', 50),           -- 2
-	('Bread super-sale', 40),           -- 3
-	('20% off from EVERYTHING!', 20),   -- 4
-	('1 product for FREE!', 100);       -- 5
+INSERT INTO coupons (name, percentage, user_id) VALUES
+	('Sausage discount', 10, 1),           -- 1
+	('Bread super-sale', 50, 2),           -- 2
+	('Bread super-sale', 40, 2),           -- 3
+	('20% off from EVERYTHING!', 20,1),   -- 4
+	('1 product for FREE!', 100,2);       -- 5
 
 INSERT INTO coupons_shops (coupon_id, shop_id) VALUES
     (1, 1), -- 1
@@ -69,3 +71,5 @@ INSERT INTO coupons_shops (coupon_id, shop_id) VALUES
     (4, 3), -- 4
     (5, 2), -- 5
     (5, 5);
+
+
