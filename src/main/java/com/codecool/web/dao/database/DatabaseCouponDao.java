@@ -2,6 +2,7 @@ package com.codecool.web.dao.database;
 
 import com.codecool.web.dao.CouponDao;
 import com.codecool.web.model.Coupon;
+import com.codecool.web.service.exception.ServiceException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -22,6 +23,24 @@ public final class DatabaseCouponDao extends AbstractDao implements CouponDao {
              ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 coupons.add(fetchCoupon(resultSet));
+            }
+        }
+        return coupons;
+    }
+
+    @Override
+    public List<Coupon> couponShopUserFilter(int userID, int shopID) throws SQLException {
+        List<Coupon> coupons = new ArrayList<>();
+        String sql = "select coupons.id, coupons.name, percentage, user_id from coupons\n " +
+            "join coupons_shops on coupons_shops.coupon_id = coupons.id\n " +
+            "join shops on coupons_shops.shop_id = shops.id\n " +
+            "where user_id = ? and shop_id = ?";
+        try(PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userID);
+            statement.setInt(2, shopID);
+            ResultSet rs = statement.executeQuery();
+            while(rs.next()) {
+                coupons.add(fetchCoupon(rs));
             }
         }
         return coupons;

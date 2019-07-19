@@ -20,11 +20,11 @@
     </tr>
     </thead>
     <tbody>
-    <c:forEach var="coupon" items="${coupons}">
+    <c:forEach var="item" items="${Flist}">
         <tr>
-            <td>${coupon.id}</td>
-            <td><a href="coupon?id=<c:out value="${coupon.id}"/>">${coupon.name}</a></td>
-            <td>${coupon.percentage}</td>
+            <td>${item.id}</td>
+            <td>${item.name}</td>
+            <td>${item.percentage}</td>
         </tr>
     </c:forEach>
     </tbody>
